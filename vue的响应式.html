@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    // 1. app.message修改数据，Vue内部是如何监听message数据的改变
+    // * Object.defineProperty -> 监听对象属性的改变
+
+    // 2. 当数据发生改变，Vue是如何直到要通知那些人，界面发生刷新 
+    // * 发布订阅者模式
+    Object.keys(obj).forEach(key=>{
+      let value = obj[key]
+      object.defineProperty(obj,key,{
+        set(newValue){
+          console.log("监听"+key+"改变");
+          value = newValue
+        },
+        get(){
+          // 张三：get->update
+          // 李四：get->updatr
+          // 王五：
+          // 使用的人会获取相应的get，可以查看是谁再用
+          console.log("获取"+key+"对应的值")
+          return value
+        }
+      })
+    });
+
+    // 发布者订阅者模式
+    class Dep{
+      constructor(){
+        this.subs = []; // 记录谁要订阅这个属性
+        addSub(wather){
+          this.subd.push(wather);
+        };
+        // 通知
+        notify(){
+          this.sub.forEach(item=>{
+            item.update();
+          });
+        }
+      } 
+    }
+
+    // 订阅者
+    class Watcher{
+      constructor(name){
+        this.name = name
+      }
+    }
+
+    update(){
+      console.log(this.name+"发生update")
+    }
+    const dep = new Dep()
+
+    const w1 = new Watcher('张三')
+    dep.addSub(w1)
+
+    const w2 = new Watcher('李四')
+    dep.addSub(w2)
+
+    const w3 = new Watcher('王五')
+    dep.addSub(w3)
+
+    dep.notify()
+  </script>
+</head>
+<body>
+  
+</body>
+</html>
